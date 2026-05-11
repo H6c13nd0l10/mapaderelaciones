@@ -1,0 +1,306 @@
+{
+  "version": 1,
+  "ultimo_update": "2026-05-09",
+  "nodos": [
+    {
+      "id": "toviggino",
+      "nombre": "Pablo Toviggino",
+      "cat": "afa",
+      "rol": "Tesorero AFA — procesado",
+      "apariciones": 4,
+      "notas": ["5/3/2026", "22/1/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Tesorero de la AFA. Procesado por retención indebida de aportes ($19.300 millones). Investigado por evasión, lavado y maniobras cambiarias (USD 140M durante el cepo). ARCA detectó facturas apócrifas por $235 millones. Mansión en Pilar valuada en USD 17 millones. Prohibición de salida del país."
+    },
+    {
+      "id": "tapia",
+      "nombre": "Claudio 'Chiqui' Tapia",
+      "cat": "afa",
+      "rol": "Presidente AFA — procesado",
+      "apariciones": 4,
+      "notas": ["5/3/2026", "22/1/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Presidente de la AFA. Procesado con Toviggino por retención indebida de aportes ($19.300 millones). El fiscal de Santiago del Estero pidió su detención. Fundó la universidad donde Mahiques fue vicerrector. Denunciado ante la Conmebol por Bullrich."
+    },
+    {
+      "id": "mahiques_jb",
+      "nombre": "Juan Bautista Mahiques",
+      "cat": "judicial",
+      "rol": "Ministro de Justicia",
+      "apariciones": 4,
+      "notas": ["5/3/2026", "22/1/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Ministro de Justicia desde 4/3/2026. Ex Fiscal General de CABA. Vicerrector de la universidad fundada por Tapia. Padrino: Angelici. Amigo de Wado De Pedro. Proveyó abogados a Toviggino. Según Pagni: 'lealtades de 360 grados'. Su gestión implica armar un Poder Judicial completo con 200+ vacantes."
+    },
+    {
+      "id": "caputo_s",
+      "nombre": "Santiago Caputo",
+      "cat": "gobierno",
+      "rol": "'El Mago del Kremlin' — asesor presidencial",
+      "apariciones": 4,
+      "notas": ["5/3/2026", "22/1/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Asesor presidencial sin cargo formal. Arquitecto de la victoria electoral de Milei. Perdió el Ministerio de Justicia ante Karina. Retuvo la SIDE vía Auguadra. Enemistado con Mahiques y Viola. Vinculado a Scatturice."
+    },
+    {
+      "id": "zamora",
+      "nombre": "Gerardo Zamora",
+      "cat": "afa",
+      "rol": "Senador — Santiago del Estero",
+      "apariciones": 4,
+      "notas": ["5/3/2026", "22/1/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Gobernador histórico de Santiago del Estero y senador. Según Pagni: 'tiene tres votos' clave para Corte y Procuración (requieren 2/3 del Senado). Sería el socio oculto de Toviggino y dueño real de la plataforma Carnaval. Primer patrocinante de la candidatura de Massa en 2023."
+    },
+    {
+      "id": "milei_k",
+      "nombre": "Karina Milei",
+      "cat": "gobierno",
+      "rol": "Secretaria General de Presidencia",
+      "apariciones": 3,
+      "notas": ["5/3/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Hermana del Presidente y figura de mayor poder real en el gobierno. Orquestó el reemplazo de Cúneo Libarona en Justicia. Su avance representa la primera pérdida neta de poder de Caputo. Mencionada en audios de Spagnuolo como presunta receptora de coimas de ANDIS."
+    },
+    {
+      "id": "lijo",
+      "nombre": "Ariel Lijo",
+      "cat": "judicial",
+      "rol": "Juez federal — ex candidato a Corte Suprema",
+      "apariciones": 3,
+      "notas": ["5/3/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Juez federal de Comodoro Py. Candidato propuesto por Milei para la Corte Suprema (no prosperó). Tiene las causas de Adorni (enriquecimiento), del 'Turco' Calián, y de Sur Finanzas/Vallejo. 30+ pedidos de juicio político. Amigo de Montenegro y Stiuso. Según Pagni, compite con Mahiques por la Procuración General."
+    },
+    {
+      "id": "massa",
+      "nombre": "Sergio Massa",
+      "cat": "gobierno",
+      "rol": "Ex ministro de Economía — candidato PJ",
+      "apariciones": 3,
+      "notas": ["5/3/2026", "22/1/2026", "1/4/2026"],
+      "bio": "Ex ministro de Economía, ex candidato presidencial del kirchnerismo en 2023. Cercanísimo a Toviggino. Los Faroni son sus íntimos y diputados de su Frente Renovador. Zamora fue su primer patrocinante en 2023."
+    },
+    {
+      "id": "scatturice",
+      "nombre": "Leonardo Scatturice",
+      "cat": "inteligencia",
+      "rol": "Empresario — Miami — vínculo Caputo",
+      "apariciones": 3,
+      "notas": ["22/1/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Empresario radicado en Miami con conexiones en el entorno de Trump. Dueño del avión en que aterrizó Laura Arrieta con valijas no revisadas por Aduana. Recomendó la designación de Vázquez al frente de ARCA. Ejerce influencia sobre el 'Mago' Caputo. Reunido en Roldán (restaurante Vila/Manzano) con Vidal y Yacobitti."
+    },
+    {
+      "id": "stiuso",
+      "nombre": "Antonio 'Jaime' Stiuso",
+      "cat": "inteligencia",
+      "rol": "Ex jefe operacional SIDE",
+      "apariciones": 3,
+      "notas": ["5/3/2026", "22/1/2026", "29/4/2026"],
+      "bio": "Ex jefe operacional de la SIDE. Figura que sobrevive a todos los gobiernos. El 'Coco' Mahiques se vanagloria de su amistad. Impulsó a Montenegro para Justicia junto a Lijo y Nejamkis. Según Pagni, Martínez de Giorgi es 'el magistrado más obediente con que cuenta Stiuso en Tribunales'."
+    },
+    {
+      "id": "viola",
+      "nombre": "Santiago Viola",
+      "cat": "judicial",
+      "rol": "Secretario de Justicia",
+      "apariciones": 3,
+      "notas": ["5/3/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Secretario de Justicia (decreto 142/2026). Apoderado electoral de LLA. Abogado personal de Karina Milei. Hijo de Claudia Balbín. Procesado por testigos falsos contra Casanello. Causó muerte de Fexesta Maidana (BMW, Panamericana, 2018). 'Fixer' del Gobierno. Quien llevó a Mahiques al Ministerio."
+    },
+    {
+      "id": "mahiques_c",
+      "nombre": "Carlos 'Coco' Mahiques",
+      "cat": "judicial",
+      "rol": "Juez Cámara Federal de Casación Penal",
+      "apariciones": 3,
+      "notas": ["5/3/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Juez de la Sala I de Casación Penal. Padre del ministro. 'El boxindanga'. Participó en el viaje a Lago Escondido. Festejó su cumpleaños en la mansión de Toviggino. Se vanagloria de su amistad con Stiuso. Milei lo repostuló en el Senado para que continúe como juez tras los 75 años."
+    },
+    {
+      "id": "vallejo",
+      "nombre": "Ariel Vallejo",
+      "cat": "afa",
+      "rol": "Titular de Sur Finanzas — financista AFA",
+      "apariciones": 3,
+      "notas": ["22/1/2026", "1/4/2026", "29/4/2026"],
+      "bio": "Titular de Sur Finanzas, la financiera a través de la cual la AFA procesaba su relación económica con los clubes del Gran Buenos Aires. Investigado por Lijo. Pedido de detención de la fiscal Incardona. Vinculado a Insaurralde. Causa caída en el juzgado federal de Lomas de Zamora (Villena)."
+    },
+    {
+      "id": "gonzalez_charvay",
+      "nombre": "Adrián González Charvay",
+      "cat": "judicial",
+      "rol": "Juez federal de Campana",
+      "apariciones": 2,
+      "notas": ["22/1/2026", "29/4/2026"],
+      "bio": "Juez federal de Campana. Recibió la causa AFA derivada del juzgado de Aguinsky. Vinculado al intendente Achával de Pilar y, según Pagni, con larga experiencia con los servicios de inteligencia por la zona norte del Conurbano, ruta de la droga. Tiene el domicilio alternativo que la AFA intenta conseguir."
+    },
+    {
+      "id": "adorni",
+      "nombre": "Manuel Adorni",
+      "cat": "gobierno",
+      "rol": "Jefe de Gabinete — investigado",
+      "apariciones": 2,
+      "notas": ["1/4/2026", "29/4/2026"],
+      "bio": "Jefe de Gabinete. Investigado por enriquecimiento ilícito (causa en el juzgado de Lijo). Propiedades no declaradas, incluyendo departamento de 200m² en Caballito valuado en USD 230.000. Vuelo en jet privado a Punta del Este. Candidato previsto para que Milei conquiste CABA."
+    },
+    {
+      "id": "pernía",
+      "nombre": "Jonathan 'Tato' Pernía",
+      "cat": "afa",
+      "rol": "Financista — Liverpool Group S.A.",
+      "apariciones": 2,
+      "notas": ["22/1/2026", "1/4/2026"],
+      "bio": "Titular de Liverpool Group S.A. Según Pagni, hizo pasar grandes cantidades de dólares por varios países de América Latina hasta el Río de la Plata. Habría integrado la red de 'cuevas' que operaban con dólares oficiales en el mercado blue. Nexo entre Toviggino, Vallejo y los fondos de Qatar."
+    },
+    {
+      "id": "calian",
+      "nombre": "Alejandro 'el Turco' Calián",
+      "cat": "afa",
+      "rol": "Operador financiero — submundo fútbol",
+      "apariciones": 2,
+      "notas": ["22/1/2026", "1/4/2026"],
+      "bio": "Operador del submundo financiero del fútbol. Condenado en suspenso por contrabando de motos (causa de la jueza Arroyo Salgado). Pasó 6 meses preso. Vinculado a las cuevas de Piccirillo, Hauque y Vallejo. Íntimo de Rodrigo De Paul. Se ufana de no tener nada a su nombre."
+    },
+    {
+      "id": "vila_manzano",
+      "nombre": "Daniel Vila / José Luis Manzano",
+      "cat": "poder",
+      "rol": "Empresarios medios y energía",
+      "apariciones": 2,
+      "notas": ["5/3/2026", "1/4/2026"],
+      "bio": "Vila y Manzano surgieron al empresariado mediático y energético desde la política menemista. Manzano era ministro del Interior de Menem. Vila es presidente de Independiente Rivadavia y apoyo de Tapia/Toviggino en AFA. Dueños del restaurante Roldán donde Scatturice se reunió con Vidal y Yacobitti."
+    },
+    {
+      "id": "faroni",
+      "nombre": "Javier Faroni / Érica Gillette",
+      "cat": "afa",
+      "rol": "Intermediarios contratos internacionales AFA",
+      "apariciones": 2,
+      "notas": ["22/1/2026", "1/4/2026"],
+      "bio": "Intermediarios de contratos internacionales de la AFA. Íntimos de Massa. Diputados del Frente Renovador. Según versiones, el tesoro de Qatar pasó por el departamento de Marcela Faroni en Miami. Gillette muy expuesta ante la Justicia norteamericana por empresa en EEUU usada para mediar flujos de dinero."
+    },
+    {
+      "id": "bruglia_bertuzzi",
+      "nombre": "Bruglia / Bertuzzi",
+      "cat": "judicial",
+      "rol": "Camaristas federales — desplazados",
+      "apariciones": 2,
+      "notas": ["5/3/2026", "29/4/2026"],
+      "bio": "Camaristas federales. Procesaron a Viola en la causa de testigos falsos. El gobierno Milei los desplaza de la Cámara Penal Federal invocando un fallo de la Corte. Según Pagni, ese mismo criterio no se aplica al padre del ministro (Carlos Mahiques), que también llegó a su cargo por traslado."
+    },
+    {
+      "id": "montenegro",
+      "nombre": "Guillermo Montenegro",
+      "cat": "judicial",
+      "rol": "Ex juez — candidato de Caputo para Justicia",
+      "apariciones": 2,
+      "notas": ["5/3/2026", "1/4/2026"],
+      "bio": "Ex juez federal, ex intendente de Mar del Plata. Candidato de Caputo para el Ministerio de Justicia. Amigo de Lijo y Stiuso. Su secretario privado: Lucas Nejamkis. Perdió ante Mahiques, el candidato de Karina."
+    },
+    {
+      "id": "milei_j",
+      "nombre": "Javier Milei",
+      "cat": "gobierno",
+      "rol": "Presidente de la Nación",
+      "apariciones": 2,
+      "notas": ["5/3/2026", "29/4/2026"],
+      "bio": "Presidente de Argentina desde diciembre 2023. Designó a Mahiques como ministro de Justicia el 4/3/2026. Propuso a Lijo para la Corte Suprema (no prosperó). Defendió públicamente a Adorni en el Congreso, llamando 'corruptos' y 'chorros' a los periodistas."
+    },
+    {
+      "id": "angelici",
+      "nombre": "Daniel Angelici",
+      "cat": "poder",
+      "rol": "Ex presidente Boca — operador judicial",
+      "apariciones": 1,
+      "notas": ["5/3/2026"],
+      "bio": "Ex presidente de Boca Juniors. Padrino de JB Mahiques. Vicepresidente actual de AFA. Histórico operador judicial del macrismo. Organizó cena con Lijo, Ercolini, Stornelli, Martínez de Giorgi cuando ganó Macri en 2015. Dueño de bingos y tragamonedas."
+    },
+    {
+      "id": "borinsky",
+      "nombre": "Mariano Borinsky",
+      "cat": "judicial",
+      "rol": "Presidente Cámara Federal de Casación",
+      "apariciones": 2,
+      "notas": ["5/3/2026", "29/4/2026"],
+      "bio": "Presidente de la Cámara Federal de Casación Penal. Firmó la exculpación de Viola y Miragaya. Candidato a Corte Suprema o Procuración. Aval de Karina vía Wasserman. Se reunió con Caputo en Casa Rosada (abril 2026). Confirmó condena de Cristina Kirchner en Vialidad."
+    },
+    {
+      "id": "spagnuolo",
+      "nombre": "Diego Spagnuolo",
+      "cat": "caso",
+      "rol": "Ex director ANDIS — audios",
+      "apariciones": 2,
+      "notas": ["5/3/2026", "22/1/2026"],
+      "bio": "Ex director de ANDIS. Sus audios difundidos por la plataforma Carnaval revelan supuestas coimas de hasta USD 800.000 mensuales hacia Karina Milei y los Menem. Declaró en Comodoro Py. Viola habría intentado negociar su silencio."
+    }
+  ],
+  "aristas": [
+    {"desde": "toviggino", "hasta": "tapia", "label": "cúpula AFA — procesados juntos", "notas": ["22/1/2026", "1/4/2026"], "peso": 2},
+    {"desde": "toviggino", "hasta": "mahiques_jb", "label": "Mahiques proveyó sus abogados 'desde mucho antes de la tormenta'", "notas": ["5/3/2026", "1/4/2026"], "peso": 2},
+    {"desde": "toviggino", "hasta": "zamora", "label": "socio oculto — dueño oculto de Carnaval", "notas": ["5/3/2026", "1/4/2026"], "peso": 2},
+    {"desde": "toviggino", "hasta": "massa", "label": "cercanísimos históricamente", "notas": ["22/1/2026", "1/4/2026"], "peso": 2},
+    {"desde": "toviggino", "hasta": "spagnuolo", "label": "audios de Spagnuolo difundidos por Carnaval", "notas": ["5/3/2026"], "peso": 1},
+    {"desde": "toviggino", "hasta": "vallejo", "label": "Sur Finanzas procesaba operaciones de la AFA", "notas": ["22/1/2026", "1/4/2026"], "peso": 2},
+    {"desde": "toviggino", "hasta": "pernía", "label": "Pernía movió fondos de Qatar para Toviggino", "notas": ["22/1/2026", "1/4/2026"], "peso": 2},
+    {"desde": "toviggino", "hasta": "faroni", "label": "Faroni es intermediario de contratos internacionales AFA", "notas": ["22/1/2026", "1/4/2026"], "peso": 2},
+    {"desde": "toviggino", "hasta": "mahiques_c", "label": "cumpleaños del 'Coco' en su mansión de Pilar", "notas": ["5/3/2026", "1/4/2026"], "peso": 2},
+    {"desde": "toviggino", "hasta": "calian", "label": "Calián y Caló llevaron fondos de Qatar para Tapia y Toviggino", "notas": ["1/4/2026"], "peso": 1},
+    {"desde": "mahiques_jb", "hasta": "milei_k", "label": "Karina orquestó su designación el 4/3/2026", "notas": ["5/3/2026"], "peso": 1},
+    {"desde": "mahiques_jb", "hasta": "viola", "label": "Viola lo llevó al Ministerio — trabajan juntos", "notas": ["5/3/2026", "29/4/2026"], "peso": 2},
+    {"desde": "mahiques_jb", "hasta": "angelici", "label": "ahijado de Angelici", "notas": ["5/3/2026"], "peso": 1},
+    {"desde": "mahiques_jb", "hasta": "tapia", "label": "vicerrector universidad de Tapia / hermano Esteban en AFA", "notas": ["5/3/2026", "1/4/2026"], "peso": 2},
+    {"desde": "mahiques_jb", "hasta": "mahiques_c", "label": "padre e hijo", "notas": ["5/3/2026", "29/4/2026"], "peso": 2},
+    {"desde": "mahiques_jb", "hasta": "bruglia_bertuzzi", "label": "gobierno desplaza a Bruglia y Bertuzzi — procesaron a Viola", "notas": ["29/4/2026"], "peso": 1},
+    {"desde": "caputo_s", "hasta": "milei_k", "label": "interna — Karina le ganó Justicia", "notas": ["5/3/2026", "29/4/2026"], "peso": 2},
+    {"desde": "caputo_s", "hasta": "scatturice", "label": "Scatturice ejerce influencia determinante sobre Caputo", "notas": ["1/4/2026", "29/4/2026"], "peso": 2},
+    {"desde": "caputo_s", "hasta": "montenegro", "label": "Montenegro era su candidato para Justicia", "notas": ["5/3/2026", "1/4/2026"], "peso": 2},
+    {"desde": "caputo_s", "hasta": "mahiques_jb", "label": "enemistados — Caputo perdió Justicia", "notas": ["29/4/2026"], "peso": 1},
+    {"desde": "lijo", "hasta": "adorni", "label": "investiga a Adorni por enriquecimiento ilícito", "notas": ["1/4/2026", "29/4/2026"], "peso": 2},
+    {"desde": "lijo", "hasta": "stiuso", "label": "Stiuso lo impulsó junto a Montenegro para Justicia", "notas": ["5/3/2026", "1/4/2026"], "peso": 2},
+    {"desde": "lijo", "hasta": "montenegro", "label": "amigos — Lijo alentaba su candidatura", "notas": ["5/3/2026", "1/4/2026"], "peso": 2},
+    {"desde": "lijo", "hasta": "calian", "label": "lleva la causa del 'Turco' Calián", "notas": ["1/4/2026"], "peso": 1},
+    {"desde": "scatturice", "hasta": "vila_manzano", "label": "se reunió en Roldán (restaurante de Vila/Manzano)", "notas": ["29/4/2026"], "peso": 1},
+    {"desde": "gonzalez_charvay", "hasta": "toviggino", "label": "recibió la causa AFA — domicilio alternativo en Pilar", "notas": ["22/1/2026", "29/4/2026"], "peso": 2},
+    {"desde": "gonzalez_charvay", "hasta": "stiuso", "label": "conexión con inteligencia — zona norte, ruta de la droga", "notas": ["22/1/2026"], "peso": 1},
+    {"desde": "vallejo", "hasta": "calian", "label": "Calián operaba en las cuevas de Vallejo", "notas": ["1/4/2026"], "peso": 1},
+    {"desde": "massa", "hasta": "zamora", "label": "Zamora fue su primer patrocinante en 2023", "notas": ["1/4/2026"], "peso": 1},
+    {"desde": "massa", "hasta": "faroni", "label": "Faroni es íntimo de Massa — diputado Frente Renovador", "notas": ["22/1/2026", "1/4/2026"], "peso": 2},
+    {"desde": "spagnuolo", "hasta": "milei_k", "label": "audios: coimas ANDIS hacia Karina Milei", "notas": ["5/3/2026"], "peso": 1},
+    {"desde": "bruglia_bertuzzi", "hasta": "viola", "label": "procesaron a Viola en causa testigos falsos", "notas": ["5/3/2026", "29/4/2026"], "peso": 2},
+    {"desde": "pernía", "hasta": "vallejo", "label": "integró red de cuevas con Sur Finanzas", "notas": ["22/1/2026", "1/4/2026"], "peso": 2},
+    {"desde": "calian", "hasta": "pernía", "label": "'el Turco' llevaba los fondos, 'Tato' hacía el rulo", "notas": ["1/4/2026"], "peso": 1},
+    {"desde": "faroni", "hasta": "massa", "label": "íntimos — diputados Frente Renovador", "notas": ["22/1/2026", "1/4/2026"], "peso": 2}
+  ],
+  "notas_fuente": [
+    {
+      "id": "pagni_5mar",
+      "fecha": "5/3/2026",
+      "titulo": "Los pasadizos secretos detrás del recambio en Justicia",
+      "url": "https://www.lanacion.com.ar/politica/los-pasadizos-secretos-detras-del-recambio-en-justicia-nid05032026/",
+      "periodista": "Carlos Pagni",
+      "medio": "La Nación",
+      "nodos_iluminados": ["mahiques_jb", "milei_k", "caputo_s", "viola", "toviggino", "tapia", "zamora", "borinsky", "mahiques_c", "bruglia_bertuzzi", "angelici", "spagnuolo", "montenegro", "lijo"]
+    },
+    {
+      "id": "pagni_22ene",
+      "fecha": "22/1/2026",
+      "titulo": "Los oscuros movimientos detrás del cambio de juez en la causa por los fondos de la AFA",
+      "url": "https://www.lanacion.com.ar/politica/los-oscuros-movimientos-detras-del-cambio-de-juez-en-la-causa-por-los-fondos-de-la-afa-nid22012026/",
+      "periodista": "Carlos Pagni",
+      "medio": "La Nación",
+      "nodos_iluminados": ["toviggino", "tapia", "gonzalez_charvay", "stiuso", "zamora", "massa", "vallejo", "faroni", "pernía", "calian", "spagnuolo"]
+    },
+    {
+      "id": "pagni_1abr",
+      "fecha": "1/4/2026",
+      "titulo": "Los crujidos políticos que complican la economía",
+      "url": "https://www.lanacion.com.ar/politica/los-crujidos-politicos-que-complican-la-economia-nid01042026/",
+      "periodista": "Carlos Pagni",
+      "medio": "La Nación",
+      "nodos_iluminados": ["milei_j", "milei_k", "caputo_s", "adorni", "mahiques_jb", "toviggino", "tapia", "lijo", "stiuso", "scatturice", "massa", "zamora", "vallejo", "faroni", "calian", "pernía", "vila_manzano", "montenegro", "borinsky"]
+    },
+    {
+      "id": "pagni_29abr",
+      "fecha": "29/4/2026",
+      "titulo": "La tentación populista del Presidente",
+      "url": "https://www.lanacion.com.ar/politica/la-tentacion-populista-nid29042026/",
+      "periodista": "Carlos Pagni",
+      "medio": "La Nación",
+      "nodos_iluminados": ["milei_j", "milei_k", "caputo_s", "adorni", "mahiques_jb", "viola", "mahiques_c", "bruglia_bertuzzi", "lijo", "borinsky", "stiuso", "scatturice", "toviggino", "tapia", "gonzalez_charvay", "vila_manzano"]
+    }
+  ]
+}

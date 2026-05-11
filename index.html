@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAPA DE RELACIONES — Pagni Explicado</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --bg:#0a0a0f; --bg2:#12121a; --bg3:#1a1a26;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+  --text:#e8e4d8; --text2:#8a8478; --text3:#3a3830;
+  --accent:#c8a84b; --red:#e03030;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html,body { width:100%; height:100%; overflow:hidden; background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; }
+
+/* ── HEADER DOS FILAS ── */
+#header {
+  position:fixed; top:0; left:0; right:0; height:88px;
+  background:var(--bg2); border-bottom:1px solid var(--border);
+  display:flex; flex-direction:column; z-index:50;
+}
+
+/* fila 1 */
+#header-row1 {
+  height:44px; display:flex; align-items:center;
+  padding:0 14px; gap:10px;
+  border-bottom:1px solid var(--border);
+}
+#brand { font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; color:var(--accent); letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+#brand span { color:var(--text3); font-weight:400; }
+#experimental {
+  font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--text3);
+  letter-spacing:.06em; border:0.5px solid var(--text3); border-radius:3px;
+  padding:1px 5px; white-space:nowrap; cursor:default; position:relative;
+}
+#experimental:hover { color:var(--text2); border-color:var(--text2); }
+#experimental .tooltip {
+  display:none; position:absolute; top:calc(100% + 8px); left:0;
+  width:280px; padding:10px 12px;
+  background:var(--bg2); border:0.5px solid var(--border2);
+  border-radius:6px; font-size:11px; color:var(--text2);
+  font-family:'IBM Plex Sans',sans-serif; line-height:1.6;
+  letter-spacing:0; text-transform:none; font-weight:400;
+  z-index:200; pointer-events:none;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+}
+#experimental:hover .tooltip { display:block; }
+#stats-bar { font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace; white-space:nowrap; margin-left:6px; }
+#stats-bar span { color:var(--accent); }
+
+/* botones row1 */
+#btn-reset {
+  margin-left:auto; flex-shrink:0;
+  padding:3px 10px; border-radius:20px;
+  background:transparent; border:0.5px solid var(--border2);
+  color:var(--text2); font-size:10px; font-family:'IBM Plex Mono',monospace;
+  cursor:pointer; transition:all .15s; white-space:nowrap;
+}
+#btn-reset:hover { border-color:var(--text2); color:var(--text); }
+#btn-agregar-nota {
+  flex-shrink:0; padding:3px 12px; border-radius:20px;
+  background:rgba(200,168,75,0.1); border:0.5px solid var(--accent);
+  color:var(--accent); font-size:10px; font-family:'IBM Plex Mono',monospace;
+  cursor:pointer; transition:all .15s; white-space:nowrap;
+}
+#btn-agregar-nota:hover { background:rgba(200,168,75,0.2); }
+
+/* fila 2 */
+#header-row2 {
+  height:44px; display:flex; align-items:center;
+  padding:0 14px; gap:6px;
+}
+#filter-bar { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.fpill { display:flex; align-items:center; gap:4px; padding:3px 8px; border-radius:20px; border:0.5px solid var(--border2); background:transparent; cursor:pointer; font-size:10px; font-family:'IBM Plex Sans',sans-serif; color:var(--text2); transition:all .15s; white-space:nowrap; }
+.fpill:hover { background:var(--bg3); color:var(--text); }
+.fpill.active { color:#fff; border-color:transparent; }
+.fpill .fd { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+
+#row2-sep { width:1px; height:22px; background:var(--border); margin:0 4px; flex-shrink:0; }
+
+#fuentes-bar { display:flex; align-items:center; gap:4px; flex-shrink:0; overflow-x:auto; }
+#fuentes-bar::-webkit-scrollbar { height:0; }
+.fnota { padding:3px 9px; border-radius:4px; border:0.5px solid var(--border); background:transparent; cursor:pointer; font-size:9px; font-family:'IBM Plex Mono',monospace; color:var(--text2); transition:all .15s; white-space:nowrap; }
+.fnota:hover { background:var(--bg3); color:var(--text2); border-color:var(--border2); }
+.fnota.active { background:rgba(200,168,75,0.1); border-color:var(--accent); color:var(--accent); }
+
+/* ── CANVAS ── */
+#canvas-area { position:fixed; top:88px; left:0; right:0; bottom:0; }
+canvas { display:block; width:100%; height:100%; cursor:grab; }
+canvas:active { cursor:grabbing; }
+
+/* zoom */
+#zoom-ctrl { position:fixed; bottom:20px; right:20px; display:flex; flex-direction:column; gap:5px; z-index:40; }
+.zbtn { width:32px; height:32px; background:var(--bg2); border:0.5px solid var(--border2); border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text2); font-size:17px; font-family:monospace; transition:all .15s; }
+.zbtn:hover { background:var(--bg3); color:var(--text); }
+
+#hint { position:fixed; bottom:20px; left:20px; font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace; pointer-events:none; z-index:40; }
+#tooltip { position:fixed; pointer-events:none; padding:5px 10px; background:var(--bg2); border:0.5px solid var(--border2); border-radius:6px; font-size:12px; color:var(--text); opacity:0; transition:opacity .1s; z-index:200; white-space:nowrap; }
+
+/* ── NOTA ACTIVA ── */
+#nota-activa { position:fixed; top:98px; left:50%; transform:translateX(-50%); padding:4px 14px; background:rgba(200,168,75,0.12); border:0.5px solid var(--accent); border-radius:20px; font-size:10px; font-family:'IBM Plex Mono',monospace; color:var(--accent); z-index:40; pointer-events:none; opacity:0; transition:opacity .3s; max-width:600px; text-align:center; }
+#nota-activa.show { opacity:1; }
+
+/* ── OVERLAY ── */
+#overlay { position:fixed; inset:0; background:transparent; z-index:99; display:none; }
+#overlay.show { display:block; }
+
+/* ── DRAWER ── */
+#drawer { position:fixed; top:88px; right:0; bottom:0; width:370px; background:var(--bg2); border-left:1px solid var(--border); transform:translateX(100%); transition:transform .28s cubic-bezier(.4,0,.2,1); z-index:100; display:flex; flex-direction:column; overflow:hidden; }
+#drawer.open { transform:translateX(0); }
+#drawer-close { position:absolute; top:11px; right:13px; width:26px; height:26px; background:var(--bg3); border:0.5px solid var(--border2); border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text2); font-size:15px; z-index:10; transition:all .15s; }
+#drawer-close:hover { color:var(--text); }
+#drawer-photo { width:100%; height:130px; background:var(--bg3); overflow:hidden; position:relative; flex-shrink:0; }
+#drawer-initials { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:48px; font-weight:700; }
+#drawer-cat-bar { position:absolute; bottom:0; left:0; right:0; height:3px; }
+#drawer-body { flex:1; overflow-y:auto; padding:14px 16px 24px; }
+#drawer-body::-webkit-scrollbar { width:3px; }
+#drawer-body::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+#drawer-name { font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:var(--text); line-height:1.25; margin-bottom:3px; padding-right:30px; }
+#drawer-role { font-size:10px; color:var(--text2); font-family:'IBM Plex Mono',monospace; margin-bottom:5px; }
+#drawer-apariciones { font-size:10px; color:var(--accent); font-family:'IBM Plex Mono',monospace; margin-bottom:9px; }
+#drawer-bio { font-size:12px; color:var(--text); line-height:1.7; margin-bottom:9px; }
+#drawer-notas { margin-bottom:12px; }
+.nota-item { display:block; font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace; margin-bottom:3px; }
+.nota-item a { color:var(--accent); text-decoration:none; }
+.nota-item a:hover { text-decoration:underline; }
+#drawer-conn-label { font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace; letter-spacing:.08em; text-transform:uppercase; margin-bottom:7px; }
+.conn-item { display:flex; align-items:flex-start; gap:8px; padding:7px 0; border-bottom:0.5px solid var(--border); cursor:pointer; }
+.conn-item:last-child { border-bottom:none; }
+.conn-item:hover .conn-name { color:var(--accent); }
+.conn-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+.conn-name { font-size:12px; color:var(--text); font-weight:500; }
+.conn-rel { font-size:11px; color:var(--text2); margin-top:1px; line-height:1.4; }
+.conn-peso { font-size:9px; color:var(--text3); font-family:'IBM Plex Mono',monospace; margin-top:2px; }
+
+/* ── PANEL DRAG & DROP ── */
+#panel-nota {
+  position:fixed; inset:0; z-index:300;
+  background:rgba(8,8,16,0.92);
+  display:none; align-items:center; justify-content:center;
+}
+#panel-nota.show { display:flex; }
+#panel-inner {
+  width:680px; max-width:95vw;
+  background:var(--bg2); border:1px solid var(--border2);
+  border-radius:12px; overflow:hidden;
+}
+#panel-header {
+  padding:18px 20px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+#panel-header h2 { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--accent); letter-spacing:.08em; text-transform:uppercase; }
+#panel-cerrar { width:26px; height:26px; background:var(--bg3); border:0.5px solid var(--border2); border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text2); font-size:15px; }
+#panel-cerrar:hover { color:var(--text); }
+
+#panel-body { padding:20px; }
+
+/* zona drag */
+#drop-zone {
+  border:1.5px dashed var(--border2); border-radius:8px;
+  padding:30px 20px; text-align:center; cursor:pointer;
+  transition:all .2s; margin-bottom:14px; position:relative;
+}
+#drop-zone:hover, #drop-zone.over { border-color:var(--accent); background:rgba(200,168,75,0.05); }
+#drop-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
+#drop-icon { font-size:32px; margin-bottom:8px; }
+#drop-text { font-size:13px; color:var(--text2); line-height:1.6; }
+#drop-text strong { color:var(--text); }
+
+/* textarea URL/texto */
+#drop-sep { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+#drop-sep::before, #drop-sep::after { content:''; flex:1; height:1px; background:var(--border); }
+#drop-sep span { font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace; }
+
+#input-texto {
+  width:100%; min-height:100px; padding:10px 12px;
+  background:var(--bg3); border:0.5px solid var(--border);
+  border-radius:6px; color:var(--text); font-size:12px;
+  font-family:'IBM Plex Sans',sans-serif; resize:vertical; outline:none;
+  line-height:1.6; margin-bottom:12px;
+}
+#input-texto:focus { border-color:var(--accent); }
+#input-texto::placeholder { color:var(--text3); }
+
+#btn-procesar {
+  width:100%; padding:10px;
+  background:var(--accent); border:none; border-radius:6px;
+  color:#000; font-size:12px; font-weight:500;
+  font-family:'IBM Plex Mono',monospace; letter-spacing:.05em;
+  cursor:pointer; transition:opacity .15s;
+}
+#btn-procesar:hover { opacity:.85; }
+
+/* resultados */
+#resultado { display:none; margin-top:16px; }
+#resultado.show { display:block; }
+#resultado-titulo { font-size:11px; color:var(--text2); font-family:'IBM Plex Mono',monospace; letter-spacing:.06em; text-transform:uppercase; margin-bottom:10px; }
+#nodos-encontrados { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.nodo-tag {
+  padding:4px 10px; border-radius:20px; font-size:11px;
+  font-family:'IBM Plex Mono',monospace; cursor:pointer;
+  transition:all .15s; border:0.5px solid transparent;
+}
+.nodo-tag.encontrado { border-color:var(--accent); color:var(--accent); background:rgba(200,168,75,0.08); }
+.nodo-tag.no-encontrado { border-color:var(--border2); color:var(--text3); background:transparent; }
+.nodo-tag.encontrado:hover { background:rgba(200,168,75,0.15); }
+
+#resultado-msg { font-size:12px; color:var(--text2); line-height:1.6; margin-bottom:12px; }
+
+#btn-iluminar {
+  width:100%; padding:8px;
+  background:transparent; border:0.5px solid var(--accent);
+  border-radius:6px; color:var(--accent); font-size:11px;
+  font-family:'IBM Plex Mono',monospace; cursor:pointer; transition:all .15s;
+}
+#btn-iluminar:hover { background:rgba(200,168,75,0.1); }
+
+/* notas de ejemplo */
+#ejemplos { padding:0 20px 20px; border-top:1px solid var(--border); margin-top:0; }
+#ejemplos-titulo { font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace; letter-spacing:.06em; text-transform:uppercase; padding:14px 0 10px; }
+.ejemplo-btn {
+  display:block; width:100%; padding:9px 12px; margin-bottom:6px;
+  background:var(--bg3); border:0.5px solid var(--border);
+  border-radius:6px; cursor:pointer; text-align:left; transition:all .15s;
+}
+.ejemplo-btn:hover { border-color:var(--border2); }
+.ejemplo-btn .ej-titulo { font-size:12px; color:var(--text); display:block; margin-bottom:2px; }
+.ejemplo-btn .ej-meta { font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <!-- FILA 1 -->
+  <div id="header-row1">
+    <div id="brand">Mapa de Relaciones <span>/ Pagni Explicado</span></div>
+    <div id="experimental">[EXPERIMENTAL]
+      <div class="tooltip">Este proyecto es experimental y está basado en notas periodísticas. Los datos pueden estar incompletos. Las relaciones entre personas reflejan lo publicado por los periodistas citados — no constituyen acusaciones.</div>
+    </div>
+    <div id="stats-bar">
+      <span id="sn">25</span> nodos &nbsp;·&nbsp;
+      <span id="sa">35</span> vínculos &nbsp;·&nbsp;
+      <span id="sf">4</span> notas
+    </div>
+    <button id="btn-reset">◎ Ver todo</button>
+    <button id="btn-agregar-nota">+ agregá tu nota</button>
+  </div>
+  <!-- FILA 2 -->
+  <div id="header-row2">
+    <div id="filter-bar">
+      <button class="fpill active" data-filter="all" style="background:#2a1f40"><div class="fd" style="background:var(--accent)"></div>Todos</button>
+      <button class="fpill" data-filter="gobierno"><div class="fd" style="background:#7c6bb5"></div>Gobierno</button>
+      <button class="fpill" data-filter="judicial"><div class="fd" style="background:#4b9e7a"></div>Judicial</button>
+      <button class="fpill" data-filter="afa"><div class="fd" style="background:#c8724b"></div>AFA</button>
+      <button class="fpill" data-filter="inteligencia"><div class="fd" style="background:#8a8a9a"></div>Intel.</button>
+      <button class="fpill" data-filter="poder"><div class="fd" style="background:#9b59b6"></div>Poder</button>
+    </div>
+    <div id="row2-sep"></div>
+    <div id="fuentes-bar">
+      <button class="fnota" data-nota="pagni_5mar" title="Los pasadizos secretos detrás del recambio en Justicia">Pagni 5/3</button>
+      <button class="fnota" data-nota="pagni_22ene" title="Los oscuros movimientos detrás del cambio de juez en la causa por los fondos de la AFA">Pagni 22/1</button>
+      <button class="fnota" data-nota="pagni_1abr" title="Los crujidos políticos que complican la economía">Pagni 1/4</button>
+      <button class="fnota" data-nota="pagni_29abr" title="La tentación populista del Presidente">Pagni 29/4</button>
+    </div>
+  </div>
+</div>
+
+<div id="nota-activa"></div>
+<div id="canvas-area"><canvas id="c"></canvas></div>
+
+<div id="zoom-ctrl">
+  <button class="zbtn" id="zoom-in">+</button>
+  <button class="zbtn" id="zoom-out">−</button>
+  <button class="zbtn" id="zoom-reset" style="font-size:12px">⊙</button>
+</div>
+<div id="hint">scroll = zoom · arrastrar = mover · clic = perfil</div>
+<div id="tooltip"></div>
+<div id="overlay"></div>
+
+<!-- DRAWER -->
+<div id="drawer">
+  <button id="drawer-close">✕</button>
+  <div id="drawer-photo">
+    <div id="drawer-initials"></div>
+    <div id="drawer-cat-bar"></div>
+  </div>
+  <div id="drawer-body">
+    <div id="drawer-name"></div>
+    <div id="drawer-role"></div>
+    <div id="drawer-apariciones"></div>
+    <div id="drawer-bio"></div>
+    <div id="drawer-notas"></div>
+    <div id="drawer-conn-label">VÍNCULOS EN EL MAPA</div>
+    <div id="drawer-conn-list"></div>
+  </div>
+</div>
+
+<!-- PANEL DRAG & DROP -->
+<div id="panel-nota">
+  <div id="panel-inner">
+    <div id="panel-header">
+      <h2>📰 Explorá una nota periodística</h2>
+      <button id="panel-cerrar">✕</button>
+    </div>
+    <div id="panel-body">
+      <div id="drop-zone">
+        <input type="file" id="file-input" accept=".html,.txt,.pdf">
+        <div id="drop-icon">⬇</div>
+        <div id="drop-text"><strong>Arrastrá un archivo HTML o TXT</strong><br>o hacé clic para buscar en tu computadora</div>
+      </div>
+      <div id="drop-sep"><span>o pegá el texto de la nota</span></div>
+      <textarea id="input-texto" placeholder="Pegá acá el texto de la nota periodística — o una URL — y el mapa va a encontrar los personajes que ya conoce..."></textarea>
+      <button id="btn-procesar">Buscar personajes en el mapa →</button>
+      <div id="resultado">
+        <div id="resultado-titulo">Personajes encontrados</div>
+        <div id="nodos-encontrados"></div>
+        <div id="resultado-msg"></div>
+        <button id="btn-iluminar">Iluminar en el mapa</button>
+      </div>
+    </div>
+    <div id="ejemplos">
+      <div id="ejemplos-titulo">O explorá una nota de ejemplo</div>
+      <button class="ejemplo-btn" data-nota="pagni_5mar">
+        <span class="ej-titulo">Los pasadizos secretos detrás del recambio en Justicia</span>
+        <span class="ej-meta">Carlos Pagni · La Nación · 5/3/2026</span>
+      </button>
+      <button class="ejemplo-btn" data-nota="pagni_22ene">
+        <span class="ej-titulo">Los oscuros movimientos detrás del cambio de juez en la causa AFA</span>
+        <span class="ej-meta">Carlos Pagni · La Nación · 22/1/2026</span>
+      </button>
+      <button class="ejemplo-btn" data-nota="pagni_1abr">
+        <span class="ej-titulo">Los crujidos políticos que complican la economía</span>
+        <span class="ej-meta">Carlos Pagni · La Nación · 1/4/2026</span>
+      </button>
+      <button class="ejemplo-btn" data-nota="pagni_29abr">
+        <span class="ej-titulo">La tentación populista del Presidente</span>
+        <span class="ej-meta">Carlos Pagni · La Nación · 29/4/2026</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATOS ──
+const CATS = {
+  gobierno:     {color:'#7c6bb5',bg:'rgba(124,107,181,0.15)',label:'Gobierno'},
+  judicial:     {color:'#4b9e7a',bg:'rgba(75,158,122,0.15)', label:'Judicial'},
+  afa:          {color:'#c8724b',bg:'rgba(200,114,75,0.15)', label:'AFA / Fútbol'},
+  inteligencia: {color:'#8a8a9a',bg:'rgba(138,138,154,0.15)',label:'Inteligencia'},
+  poder:        {color:'#9b59b6',bg:'rgba(155,89,182,0.15)', label:'Poder / Política'},
+  caso:         {color:'#c8a84b',bg:'rgba(200,168,75,0.15)', label:'Casos / Escándalos'},
+};
+
+const NODES_DATA = [
+  {id:'toviggino',nombre:'Pablo Toviggino',cat:'afa',rol:'Tesorero AFA — procesado',apariciones:4,notas:['5/3/2026','22/1/2026','1/4/2026','29/4/2026'],bio:'Tesorero de la AFA. Procesado por retención indebida de aportes ($19.300 millones). Investigado por evasión, lavado y maniobras cambiarias (USD 140M). Mansión en Pilar valuada en USD 17 millones. Prohibición de salida del país.'},
+  {id:'tapia',nombre:"Claudio 'Chiqui' Tapia",cat:'afa',rol:'Presidente AFA — procesado',apariciones:4,notas:['5/3/2026','22/1/2026','1/4/2026','29/4/2026'],bio:'Presidente de la AFA. Procesado con Toviggino por retención indebida de aportes ($19.300 millones). El fiscal de Santiago del Estero pidió su detención. Fundó la universidad donde Mahiques fue vicerrector.'},
+  {id:'mahiques_jb',nombre:'Juan Bautista Mahiques',cat:'judicial',rol:'Ministro de Justicia',apariciones:4,notas:['5/3/2026','22/1/2026','1/4/2026','29/4/2026'],bio:'Ministro de Justicia desde 4/3/2026. Ex Fiscal General de CABA. Vicerrector de la universidad fundada por Tapia. Padrino: Angelici. Amigo de Wado De Pedro. Según Pagni: "lealtades de 360 grados". Está armando un Poder Judicial completo con 200+ vacantes.'},
+  {id:'caputo_s',nombre:'Santiago Caputo',cat:'gobierno',rol:'"El Mago del Kremlin" — asesor presidencial',apariciones:4,notas:['5/3/2026','22/1/2026','1/4/2026','29/4/2026'],bio:'Asesor presidencial sin cargo formal. Arquitecto de la victoria electoral de Milei. Perdió el Ministerio de Justicia ante Karina. Retuvo la SIDE vía Auguadra. Enemistado con Mahiques y Viola.'},
+  {id:'zamora',nombre:'Gerardo Zamora',cat:'afa',rol:'Senador — Santiago del Estero',apariciones:4,notas:['5/3/2026','22/1/2026','1/4/2026','29/4/2026'],bio:'Gobernador histórico de Santiago del Estero y senador. Según Pagni: "tiene tres votos" clave para Corte y Procuración. Sería el socio oculto de Toviggino y dueño real de la plataforma Carnaval.'},
+  {id:'milei_k',nombre:'Karina Milei',cat:'gobierno',rol:'Secretaria General de Presidencia',apariciones:3,notas:['5/3/2026','1/4/2026','29/4/2026'],bio:'Hermana del Presidente. Orquestó el reemplazo de Cúneo Libarona. Mencionada en audios de Spagnuolo como presunta receptora de coimas de ANDIS.'},
+  {id:'lijo',nombre:'Ariel Lijo',cat:'judicial',rol:'Juez federal — ex candidato a Corte Suprema',apariciones:3,notas:['5/3/2026','1/4/2026','29/4/2026'],bio:'Juez federal de Comodoro Py. Candidato propuesto por Milei para la Corte (no prosperó). Tiene las causas de Adorni, del "Turco" Calián, y de Sur Finanzas/Vallejo. 30+ pedidos de juicio político. Compite con Mahiques por la Procuración General.'},
+  {id:'massa',nombre:'Sergio Massa',cat:'gobierno',rol:'Ex ministro de Economía — candidato PJ',apariciones:3,notas:['5/3/2026','22/1/2026','1/4/2026'],bio:'Ex ministro de Economía. Cercanísimo a Toviggino. Los Faroni son sus íntimos. Zamora fue su primer patrocinante en 2023.'},
+  {id:'scatturice',nombre:'Leonardo Scatturice',cat:'inteligencia',rol:'Empresario — Miami — vínculo Caputo',apariciones:3,notas:['22/1/2026','1/4/2026','29/4/2026'],bio:'Empresario radicado en Miami. Dueño del avión donde aterrizó Arrieta con valijas sin revisar. Recomendó a Vázquez para ARCA. Influencia determinante sobre Caputo.'},
+  {id:'stiuso',nombre:"Antonio 'Jaime' Stiuso",cat:'inteligencia',rol:'Ex jefe operacional SIDE',apariciones:3,notas:['5/3/2026','22/1/2026','29/4/2026'],bio:'Ex jefe operacional de la SIDE. Figura que sobrevive a todos los gobiernos. El "Coco" Mahiques se vanagloria de su amistad. Impulsó a Montenegro para Justicia junto a Lijo.'},
+  {id:'viola',nombre:'Santiago Viola',cat:'judicial',rol:'Secretario de Justicia',apariciones:3,notas:['5/3/2026','1/4/2026','29/4/2026'],bio:'Secretario de Justicia. Apoderado electoral de LLA. Abogado personal de Karina Milei. Procesado por testigos falsos contra Casanello. Causó muerte de Fexesta Maidana (BMW, 2018).'},
+  {id:'mahiques_c',nombre:"Carlos 'Coco' Mahiques",cat:'judicial',rol:'Juez Cámara Federal de Casación Penal',apariciones:3,notas:['5/3/2026','1/4/2026','29/4/2026'],bio:'Padre del ministro. "El boxindanga". Participó en el viaje a Lago Escondido. Festejó su cumpleaños en la mansión de Toviggino. Repostulado por Milei para continuar como juez tras los 75 años.'},
+  {id:'vallejo',nombre:'Ariel Vallejo',cat:'afa',rol:'Titular de Sur Finanzas — financista AFA',apariciones:3,notas:['22/1/2026','1/4/2026','29/4/2026'],bio:'Titular de Sur Finanzas. La AFA procesaba su relación económica con los clubes a través de esta financiera. Pedido de detención de la fiscal Incardona.'},
+  {id:'gonzalez_charvay',nombre:'Adrián González Charvay',cat:'judicial',rol:'Juez federal de Campana',apariciones:2,notas:['22/1/2026','29/4/2026'],bio:'Juez federal de Campana. Recibió la causa AFA derivada del juzgado de Aguinsky. Vinculado al intendente Achával de Pilar y a los servicios de inteligencia por la zona norte, ruta de la droga.'},
+  {id:'adorni',nombre:'Manuel Adorni',cat:'gobierno',rol:'Jefe de Gabinete — investigado',apariciones:2,notas:['1/4/2026','29/4/2026'],bio:'Jefe de Gabinete. Investigado por enriquecimiento ilícito (causa en Lijo). Propiedades no declaradas, incluyendo departamento de 200m² en Caballito valuado en USD 230.000.'},
+  {id:'pernia',nombre:"Jonathan 'Tato' Pernía",cat:'afa',rol:'Financista — Liverpool Group S.A.',apariciones:2,notas:['22/1/2026','1/4/2026'],bio:'Titular de Liverpool Group S.A. Hizo pasar grandes cantidades de dólares por varios países hasta el Río de la Plata. Nexo entre Toviggino, Vallejo y los fondos de Qatar.'},
+  {id:'calian',nombre:"Alejandro 'el Turco' Calián",cat:'afa',rol:'Operador financiero — submundo fútbol',apariciones:2,notas:['22/1/2026','1/4/2026'],bio:'Operador del submundo financiero del fútbol. Condenado en suspenso por contrabando de motos. Vinculado a las cuevas de Piccirillo, Hauque y Vallejo. Íntimo de Rodrigo De Paul.'},
+  {id:'vila_manzano',nombre:'Daniel Vila / José Luis Manzano',cat:'poder',rol:'Empresarios medios y energía',apariciones:2,notas:['5/3/2026','1/4/2026'],bio:'Surgieron al empresariado desde la política menemista. Vila es presidente de Independiente Rivadavia y apoyo de Tapia/Toviggino en AFA. Dueños del restaurante Roldán.'},
+  {id:'faroni',nombre:'Javier Faroni / Érica Gillette',cat:'afa',rol:'Intermediarios contratos internacionales AFA',apariciones:2,notas:['22/1/2026','1/4/2026'],bio:'Intermediarios de contratos internacionales de la AFA. Íntimos de Massa. El tesoro de Qatar habría pasado por el departamento de Marcela Faroni en Miami.'},
+  {id:'bruglia_bertuzzi',nombre:'Bruglia / Bertuzzi',cat:'judicial',rol:'Camaristas federales — desplazados',apariciones:2,notas:['5/3/2026','29/4/2026'],bio:'Camaristas federales. Procesaron a Viola en la causa de testigos falsos. El gobierno Milei los desplaza de la Cámara Penal Federal.'},
+  {id:'montenegro',nombre:'Guillermo Montenegro',cat:'judicial',rol:'Ex juez — candidato de Caputo para Justicia',apariciones:2,notas:['5/3/2026','1/4/2026'],bio:'Ex juez federal, ex intendente de Mar del Plata. Candidato de Caputo para el Ministerio de Justicia. Amigo de Lijo y Stiuso. Perdió ante Mahiques.'},
+  {id:'milei_j',nombre:'Javier Milei',cat:'gobierno',rol:'Presidente de la Nación',apariciones:2,notas:['5/3/2026','29/4/2026'],bio:'Presidente de Argentina desde diciembre 2023. Designó a Mahiques como ministro el 4/3/2026. Propuso a Lijo para la Corte (no prosperó). Llamó "corruptos" y "chorros" a periodistas defendiendo a Adorni.'},
+  {id:'angelici',nombre:'Daniel Angelici',cat:'poder',rol:'Ex presidente Boca — operador judicial',apariciones:1,notas:['5/3/2026'],bio:'Ex presidente de Boca Juniors. Padrino de JB Mahiques. Vicepresidente actual de AFA. Histórico operador judicial del macrismo. Dueño de bingos y tragamonedas.'},
+  {id:'borinsky',nombre:'Mariano Borinsky',cat:'judicial',rol:'Presidente Cámara Federal de Casación',apariciones:2,notas:['5/3/2026','29/4/2026'],bio:'Presidente de la Cámara Federal de Casación. Firmó la exculpación de Viola y Miragaya. Candidato a Corte Suprema o Procuración. Se reunió con Caputo en Casa Rosada (abril 2026).'},
+  {id:'spagnuolo',nombre:'Diego Spagnuolo',cat:'caso',rol:'Ex director ANDIS — audios',apariciones:2,notas:['5/3/2026','22/1/2026'],bio:'Ex director de ANDIS. Sus audios revelan supuestas coimas de hasta USD 800.000 mensuales hacia Karina Milei y los Menem. Declaró en Comodoro Py.'},
+];
+
+const EDGES_DATA = [
+  {desde:'toviggino',hasta:'tapia',label:'cúpula AFA — procesados juntos',peso:2},
+  {desde:'toviggino',hasta:'mahiques_jb',label:'Mahiques proveyó sus abogados desde mucho antes',peso:2},
+  {desde:'toviggino',hasta:'zamora',label:'socio oculto — dueño oculto de Carnaval',peso:2},
+  {desde:'toviggino',hasta:'massa',label:'cercanísimos históricamente',peso:2},
+  {desde:'toviggino',hasta:'spagnuolo',label:'audios de Spagnuolo difundidos por Carnaval',peso:1},
+  {desde:'toviggino',hasta:'vallejo',label:'Sur Finanzas procesaba operaciones de la AFA',peso:2},
+  {desde:'toviggino',hasta:'pernia',label:'Pernía movió fondos de Qatar para Toviggino',peso:2},
+  {desde:'toviggino',hasta:'faroni',label:'Faroni intermediario contratos internacionales AFA',peso:2},
+  {desde:'toviggino',hasta:'mahiques_c',label:'cumpleaños del Coco en su mansión de Pilar',peso:2},
+  {desde:'toviggino',hasta:'calian',label:'Calián y Caló llevaron fondos de Qatar',peso:1},
+  {desde:'mahiques_jb',hasta:'milei_k',label:'Karina orquestó su designación el 4/3/2026',peso:1},
+  {desde:'mahiques_jb',hasta:'viola',label:'Viola lo llevó al Ministerio — trabajan juntos',peso:2},
+  {desde:'mahiques_jb',hasta:'angelici',label:'ahijado de Angelici',peso:1},
+  {desde:'mahiques_jb',hasta:'tapia',label:'vicerrector universidad de Tapia / hermano en AFA',peso:2},
+  {desde:'mahiques_jb',hasta:'mahiques_c',label:'padre e hijo',peso:2},
+  {desde:'mahiques_jb',hasta:'bruglia_bertuzzi',label:'gobierno desplaza a Bruglia/Bertuzzi que procesaron a Viola',peso:1},
+  {desde:'caputo_s',hasta:'milei_k',label:'interna — Karina le ganó Justicia',peso:2},
+  {desde:'caputo_s',hasta:'scatturice',label:'Scatturice ejerce influencia determinante sobre Caputo',peso:2},
+  {desde:'caputo_s',hasta:'montenegro',label:'Montenegro era su candidato para Justicia',peso:2},
+  {desde:'caputo_s',hasta:'mahiques_jb',label:'enemistados — Caputo perdió Justicia',peso:1},
+  {desde:'lijo',hasta:'adorni',label:'investiga a Adorni por enriquecimiento ilícito',peso:2},
+  {desde:'lijo',hasta:'stiuso',label:'Stiuso lo impulsó junto a Montenegro para Justicia',peso:2},
+  {desde:'lijo',hasta:'montenegro',label:'amigos — Lijo alentaba su candidatura',peso:2},
+  {desde:'lijo',hasta:'calian',label:'lleva la causa del Turco Calián',peso:1},
+  {desde:'scatturice',hasta:'vila_manzano',label:'se reunió en Roldán (restaurante Vila/Manzano)',peso:1},
+  {desde:'gonzalez_charvay',hasta:'toviggino',label:'recibió la causa AFA — domicilio alternativo en Pilar',peso:2},
+  {desde:'gonzalez_charvay',hasta:'stiuso',label:'conexión con inteligencia — zona norte, ruta de la droga',peso:1},
+  {desde:'vallejo',hasta:'calian',label:'Calián operaba en las cuevas de Vallejo',peso:1},
+  {desde:'massa',hasta:'zamora',label:'Zamora fue su primer patrocinante en 2023',peso:1},
+  {desde:'massa',hasta:'faroni',label:'Faroni es íntimo de Massa — diputado Frente Renovador',peso:2},
+  {desde:'spagnuolo',hasta:'milei_k',label:'audios: coimas ANDIS hacia Karina Milei',peso:1},
+  {desde:'bruglia_bertuzzi',hasta:'viola',label:'procesaron a Viola en causa testigos falsos',peso:2},
+  {desde:'pernia',hasta:'vallejo',label:'integró red de cuevas con Sur Finanzas',peso:2},
+  {desde:'calian',hasta:'pernia',label:'el Turco llevaba los fondos, Tato hacía el rulo',peso:1},
+  {desde:'faroni',hasta:'massa',label:'íntimos — diputados Frente Renovador',peso:2},
+];
+
+const FUENTES = [
+  {id:'pagni_5mar',fecha:'5/3/2026',titulo:'Los pasadizos secretos detrás del recambio en Justicia',url:'https://www.lanacion.com.ar/politica/los-pasadizos-secretos-detras-del-recambio-en-justicia-nid05032026/',periodista:'Carlos Pagni',medio:'La Nación',nodos_iluminados:['mahiques_jb','milei_k','caputo_s','viola','toviggino','tapia','zamora','borinsky','mahiques_c','bruglia_bertuzzi','angelici','spagnuolo','montenegro','lijo']},
+  {id:'pagni_22ene',fecha:'22/1/2026',titulo:'Los oscuros movimientos detrás del cambio de juez en la causa por los fondos de la AFA',url:'https://www.lanacion.com.ar/politica/los-oscuros-movimientos-detras-del-cambio-de-juez-en-la-causa-por-los-fondos-de-la-afa-nid22012026/',periodista:'Carlos Pagni',medio:'La Nación',nodos_iluminados:['toviggino','tapia','gonzalez_charvay','stiuso','zamora','massa','vallejo','faroni','pernia','calian','spagnuolo']},
+  {id:'pagni_1abr',fecha:'1/4/2026',titulo:'Los crujidos políticos que complican la economía',url:'https://www.lanacion.com.ar/politica/los-crujidos-politicos-que-complican-la-economia-nid01042026/',periodista:'Carlos Pagni',medio:'La Nación',nodos_iluminados:['milei_j','milei_k','caputo_s','adorni','mahiques_jb','toviggino','tapia','lijo','stiuso','scatturice','massa','zamora','vallejo','faroni','calian','pernia','vila_manzano','montenegro','borinsky']},
+  {id:'pagni_29abr',fecha:'29/4/2026',titulo:'La tentación populista del Presidente',url:'https://www.lanacion.com.ar/politica/la-tentacion-populista-nid29042026/',periodista:'Carlos Pagni',medio:'La Nación',nodos_iluminados:['milei_j','milei_k','caputo_s','adorni','mahiques_jb','viola','mahiques_c','bruglia_bertuzzi','lijo','borinsky','stiuso','scatturice','toviggino','tapia','gonzalez_charvay','vila_manzano']},
+];
+
+// ── ALIASES para matching ──
+const ALIASES = {};
+NODES_DATA.forEach(n => {
+  const agregar = (k, id) => { if (k && k.length > 2) ALIASES[k.toLowerCase()] = id; };
+  agregar(n.nombre, n.id);
+  const partes = n.nombre.replace(/["']/g,'').split(' ').filter(p=>p.length>2);
+  partes.forEach(p => agregar(p, n.id));
+  if (partes.length >= 2) agregar(partes[0]+' '+partes[1], n.id);
+  if (partes.length >= 3) agregar(partes[partes.length-2]+' '+partes[partes.length-1], n.id);
+  const apodos = n.nombre.match(/'([^']+)'/g)||[];
+  apodos.forEach(ap => agregar(ap.replace(/'/g,''), n.id));
+});
+// aliases manuales clave
+const manualAliases = {
+  'chiqui': 'tapia', 'el mago': 'caputo_s', 'mago': 'caputo_s',
+  'coco': 'mahiques_c', 'boxindanga': 'mahiques_c',
+  'turco': 'calian', 'gonzalote': 'calian',
+  'tato': 'pernia', 'yacabo': 'stiuso', 'jaime': 'stiuso',
+  'carnaval': 'zamora', 'sur finanzas': 'vallejo',
+  'liverpool group': 'pernia', 'karina': 'milei_k',
+};
+Object.assign(ALIASES, manualAliases);
+
+function buscarEnTexto(texto) {
+  const encontrados = new Set();
+  const textoL = texto.toLowerCase();
+  Object.entries(ALIASES).forEach(([alias, id]) => {
+    if (textoL.includes(alias)) encontrados.add(id);
+  });
+  return [...encontrados];
+}
+
+// ── CANVAS ──
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  const area = document.getElementById('canvas-area');
+  W = area.clientWidth; H = area.clientHeight;
+  canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
+  canvas.style.width = W+'px'; canvas.style.height = H+'px';
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+}
+
+let filter = 'all', notaFilter = null, customIluminados = null, selected = null;
+let dragging = null, dragOffX = 0, dragOffY = 0;
+let pan = {x:0,y:0}, panStart = null, lastPan = {x:0,y:0};
+let scale = 1, initialized = false;
+
+const nodes = NODES_DATA.map(n => ({...n, vx:0, vy:0}));
+const edges = EDGES_DATA.map(e => ({...e}));
+
+function initPositions() {
+  if (initialized) return; initialized = true;
+  const cx=W/2, cy=H/2;
+  const rings = {
+    gobierno:     {cx:cx-60,  cy:cy-150,r:130},
+    judicial:     {cx:cx+180, cy:cy+20, r:150},
+    afa:          {cx:cx-180, cy:cy+80, r:110},
+    inteligencia: {cx:cx+30,  cy:cy+200,r:90},
+    poder:        {cx:cx-40,  cy:cy-30, r:80},
+    caso:         {cx:cx+60,  cy:cy-60, r:80},
+  };
+  const bycat = {};
+  nodes.forEach(n=>{bycat[n.cat]=bycat[n.cat]||[];bycat[n.cat].push(n);});
+  Object.entries(bycat).forEach(([cat,ns])=>{
+    const r=rings[cat]||{cx:W/2,cy:H/2,r:100};
+    ns.forEach((n,i)=>{
+      const a=(2*Math.PI*i/ns.length)-Math.PI/2;
+      n.x=r.cx+Math.cos(a)*r.r+(Math.random()-.5)*20;
+      n.y=r.cy+Math.sin(a)*r.r+(Math.random()-.5)*20;
+    });
+  });
+}
+
+function nodeById(id){return nodes.find(n=>n.id===id);}
+
+function getIluminados() {
+  if (customIluminados) return new Set(customIluminados);
+  if (notaFilter) {
+    const f = FUENTES.find(f=>f.id===notaFilter);
+    return f ? new Set(f.nodos_iluminados) : null;
+  }
+  return null;
+}
+
+function visibleNodes() {
+  let ns = filter==='all' ? nodes : nodes.filter(n=>n.cat===filter);
+  const il = getIluminados();
+  if (il) ns = ns.filter(n=>il.has(n.id));
+  return ns;
+}
+function visibleEdges() {
+  const vis = new Set(visibleNodes().map(n=>n.id));
+  return edges.filter(e=>vis.has(e.desde)&&vis.has(e.hasta));
+}
+function nodeRadius(n){return Math.max(18,Math.min(36,12+n.apariciones*4));}
+
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  ctx.translate(pan.x,pan.y); ctx.scale(scale,scale);
+  const vNodes=visibleNodes(), vEdges=visibleEdges();
+
+  vEdges.forEach(e=>{
+    const a=nodeById(e.desde),b=nodeById(e.hasta); if(!a||!b) return;
+    const isSel=selected&&(selected.id===a.id||selected.id===b.id);
+    const op=notaFilter||customIluminados?0.4:(0.06+Math.min(e.peso||1,4)*0.03);
+    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+    ctx.strokeStyle=isSel?'rgba(200,168,75,0.8)':`rgba(255,255,255,${op})`;
+    ctx.lineWidth=isSel?(1.5+(e.peso||1)*0.3):(0.5+(e.peso||1)*0.2); ctx.stroke();
+    if(isSel){
+      const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+      ctx.save(); ctx.font='10px IBM Plex Mono,monospace';
+      const tw=ctx.measureText(e.label).width;
+      ctx.fillStyle='#12121a'; ctx.fillRect(mx-tw/2-4,my-8,tw+8,15);
+      ctx.fillStyle='#8a8478'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(e.label,mx,my); ctx.restore();
+    }
+  });
+
+  vNodes.forEach(n=>{
+    const r=nodeRadius(n),cat=CATS[n.cat]||CATS['caso'];
+    const isSel=selected&&selected.id===n.id;
+    const isConn=selected&&edges.some(e=>(e.desde===selected.id&&e.hasta===n.id)||(e.hasta===selected.id&&e.desde===n.id));
+    const dimmed=selected&&!isSel&&!isConn;
+    ctx.globalAlpha=dimmed?0.18:1;
+    ctx.beginPath(); ctx.arc(n.x,n.y,r,0,Math.PI*2);
+    ctx.fillStyle=isSel?cat.color+'cc':cat.bg; ctx.fill();
+    ctx.strokeStyle=isSel?'#c8a84b':cat.color;
+    ctx.lineWidth=isSel?2.5:Math.min(1+(n.apariciones||1)*0.3,2.5); ctx.stroke();
+    const ini=n.nombre.replace(/["']/g,'').split(' ').filter(w=>/[A-ZÁÉÍÓÚÑÜ]/.test(w[0])&&w.length>1).slice(0,2).map(w=>w[0]).join('');
+    ctx.font=`500 ${Math.max(9,r*.44)}px IBM Plex Mono,monospace`;
+    ctx.fillStyle=cat.color; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(ini,n.x,n.y);
+    ctx.globalAlpha=dimmed?0.12:1;
+    const parts=n.nombre.replace(/["']/g,'').trim().split(' ');
+    const disp=parts[0]+(parts[1]?' '+(parts[1].length>8?parts[1].slice(0,7)+'…':parts[1]):'');
+    ctx.font=`${Math.max(9,Math.min(11,r*.36))}px IBM Plex Sans,sans-serif`;
+    ctx.fillStyle=isSel?'#e8e4d8':'#9a9488'; ctx.textAlign='center'; ctx.textBaseline='top';
+    ctx.fillText(disp,n.x,n.y+r+4); ctx.globalAlpha=1;
+  });
+  ctx.restore();
+}
+
+function tick() {
+  const vis=visibleNodes(), visSet=new Set(vis.map(n=>n.id));
+  vis.forEach(a=>{
+    vis.forEach(b=>{
+      if(a.id>=b.id) return;
+      const dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1;
+      const minD=nodeRadius(a)+nodeRadius(b)+40;
+      if(d<minD){const f=(minD-d)/d*.11;a.vx-=dx*f;a.vy-=dy*f;b.vx+=dx*f;b.vy+=dy*f;}
+    });
+    visibleEdges().filter(e=>e.desde===a.id||e.hasta===a.id).forEach(e=>{
+      const o=nodeById(e.desde===a.id?e.hasta:e.desde);
+      if(!o||!visSet.has(o.id)) return;
+      const dx=o.x-a.x,dy=o.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1,f=(d-100)/d*.024;
+      a.vx+=dx*f;a.vy+=dy*f;
+    });
+    a.vx+=(W/2-a.x)*.0013;a.vy+=(H/2-a.y)*.0013;
+    a.vx*=.83;a.vy*=.83;
+    if(a!==dragging){a.x+=a.vx;a.y+=a.vy;}
+    a.x=Math.max(36,Math.min(W/scale-36,a.x));
+    a.y=Math.max(36,Math.min(H/scale-36,a.y));
+  });
+  draw(); requestAnimationFrame(tick);
+}
+
+function getNodeAt(px,py){
+  const wx=(px-pan.x)/scale,wy=(py-pan.y)/scale;
+  return visibleNodes().find(n=>Math.hypot(n.x-wx,n.y-wy)<nodeRadius(n)+4);
+}
+
+function openDrawer(n) {
+  const cat=CATS[n.cat]||CATS['caso'];
+  document.getElementById('drawer-name').textContent=n.nombre;
+  document.getElementById('drawer-role').textContent=n.rol+' · '+cat.label;
+  document.getElementById('drawer-apariciones').textContent=`Aparece en ${n.apariciones} nota${n.apariciones>1?'s':''} · ${(n.notas||[]).join(', ')}`;
+  document.getElementById('drawer-bio').textContent=n.bio||'';
+  document.getElementById('drawer-cat-bar').style.background=cat.color;
+  document.getElementById('drawer-initials').textContent=n.nombre.replace(/["']/g,'').split(' ').filter(w=>/[A-ZÁÉÍÓÚÑÜ]/.test(w[0])&&w.length>1).slice(0,2).map(w=>w[0]).join('');
+  document.getElementById('drawer-initials').style.color=cat.color;
+  const notasEl=document.getElementById('drawer-notas'); notasEl.innerHTML='';
+  (n.notas||[]).forEach(fecha=>{
+    const f=FUENTES.find(f=>f.fecha===fecha);
+    if(f){const d=document.createElement('div');d.className='nota-item';d.innerHTML=`<a href="${f.url}" target="_blank">📰 ${f.periodista} — ${f.medio}, ${f.fecha}</a>`;notasEl.appendChild(d);}
+  });
+  const list=document.getElementById('drawer-conn-list'); list.innerHTML='';
+  edges.filter(e=>e.desde===n.id||e.hasta===n.id).forEach(e=>{
+    const oid=e.desde===n.id?e.hasta:e.desde,o=nodeById(oid); if(!o) return;
+    const oc=CATS[o.cat]||CATS['caso'],div=document.createElement('div');
+    div.className='conn-item';
+    div.innerHTML=`<div class="conn-dot" style="background:${oc.color}"></div><div><div class="conn-name">${o.nombre}</div><div class="conn-rel">${e.label}</div><div class="conn-peso">${e.peso||1} nota${(e.peso||1)>1?'s':''}</div></div>`;
+    div.addEventListener('click',()=>{selected=o;openDrawer(o);draw();});
+    list.appendChild(div);
+  });
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  selected=null; draw();
+}
+
+function iluminarNota(notaId) {
+  notaFilter=notaId; customIluminados=null; filter='all'; selected=null; closeDrawer();
+  document.querySelectorAll('.fpill').forEach(b=>{b.classList.remove('active');b.style.background='';});
+  document.querySelector('.fpill[data-filter="all"]').classList.add('active');
+  document.querySelector('.fpill[data-filter="all"]').style.background='#2a1f40';
+  document.querySelectorAll('.fnota').forEach(b=>b.classList.remove('active'));
+  const btn=document.querySelector(`.fnota[data-nota="${notaId}"]`);
+  if(btn) btn.classList.add('active');
+  const f=FUENTES.find(f=>f.id===notaId);
+  const badge=document.getElementById('nota-activa');
+  badge.textContent=f?`Linterna: "${f.titulo}" — ${f.periodista}, ${f.fecha}`:'';
+  badge.classList.add('show');
+}
+
+function resetFiltros() {
+  notaFilter=null; customIluminados=null; filter='all';
+  document.querySelectorAll('.fnota').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nota-activa').classList.remove('show');
+  draw();
+}
+
+// ── EVENTOS CANVAS ──
+let mouseDownPos=null;
+canvas.addEventListener('mousedown',e=>{
+  const r=canvas.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
+  mouseDownPos={x:px,y:py};
+  const hit=getNodeAt(px,py);
+  if(hit){dragging=hit;dragOffX=hit.x-(px-pan.x)/scale;dragOffY=hit.y-(py-pan.y)/scale;}
+  else{panStart={x:e.clientX,y:e.clientY};lastPan={...pan};}
+});
+canvas.addEventListener('mousemove',e=>{
+  const r=canvas.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
+  if(dragging){dragging.x=(px-pan.x)/scale+dragOffX;dragging.y=(py-pan.y)/scale+dragOffY;}
+  else if(panStart){pan.x=lastPan.x+(e.clientX-panStart.x);pan.y=lastPan.y+(e.clientY-panStart.y);}
+  else{
+    const hit=getNodeAt(px,py),t=document.getElementById('tooltip');
+    if(hit){t.style.opacity='1';t.style.left=(e.clientX+12)+'px';t.style.top=(e.clientY-8)+'px';t.textContent=hit.nombre;}
+    else t.style.opacity='0';
+  }
+});
+canvas.addEventListener('mouseup',e=>{
+  if(dragging){
+    const r=canvas.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;
+    if(Math.hypot(px-mouseDownPos.x,py-mouseDownPos.y)<5){
+      if(selected&&selected.id===dragging.id)closeDrawer();
+      else{selected=dragging;openDrawer(selected);draw();}
+    }
+    dragging=null;
+  }
+  panStart=null;dragging=null;
+});
+canvas.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const r=canvas.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  const zf=e.deltaY<0?1.1:0.9;
+  pan.x=mx-(mx-pan.x)*zf;pan.y=my-(my-pan.y)*zf;
+  scale=Math.max(0.3,Math.min(4,scale*zf));
+},{passive:false});
+canvas.addEventListener('touchstart',e=>{if(e.touches.length===1){const t=e.touches[0],r=canvas.getBoundingClientRect();const px=t.clientX-r.left,py=t.clientY-r.top;mouseDownPos={x:px,y:py};const hit=getNodeAt(px,py);if(hit){dragging=hit;dragOffX=hit.x-(px-pan.x)/scale;dragOffY=hit.y-(py-pan.y)/scale;}else{panStart={x:t.clientX,y:t.clientY};lastPan={...pan};}}},{passive:true});
+canvas.addEventListener('touchmove',e=>{if(e.touches.length===1){const t=e.touches[0],r=canvas.getBoundingClientRect();const px=t.clientX-r.left,py=t.clientY-r.top;if(dragging){dragging.x=(px-pan.x)/scale+dragOffX;dragging.y=(py-pan.y)/scale+dragOffY;}else if(panStart){pan.x=lastPan.x+(t.clientX-panStart.x);pan.y=lastPan.y+(t.clientY-panStart.y);}}},{passive:true});
+canvas.addEventListener('touchend',e=>{if(e.changedTouches.length===1&&dragging){const t=e.changedTouches[0],r=canvas.getBoundingClientRect();const px=t.clientX-r.left,py=t.clientY-r.top;if(Math.hypot(px-(mouseDownPos?.x||0),py-(mouseDownPos?.y||0))<10){selected=selected&&selected.id===dragging.id?null:dragging;if(selected)openDrawer(selected);else closeDrawer();draw();}}dragging=null;panStart=null;});
+
+// ── CONTROLES ──
+document.getElementById('overlay').addEventListener('click',closeDrawer);
+document.getElementById('drawer-close').addEventListener('click',closeDrawer);
+document.getElementById('zoom-in').addEventListener('click',()=>{scale=Math.min(4,scale*1.2);});
+document.getElementById('zoom-out').addEventListener('click',()=>{scale=Math.max(0.3,scale/1.2);});
+document.getElementById('zoom-reset').addEventListener('click',()=>{scale=1;pan={x:0,y:0};});
+
+document.querySelectorAll('.fpill').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    filter=btn.dataset.filter; resetFiltros(); selected=null; closeDrawer();
+    document.querySelectorAll('.fpill').forEach(b=>{b.classList.remove('active');b.style.background='';});
+    btn.classList.add('active');
+    btn.style.background=filter==='all'?'#2a1f40':(CATS[filter]?.color+'cc'||'');
+  });
+});
+
+document.querySelectorAll('.fnota').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const mismo=notaFilter===btn.dataset.nota;
+    if(mismo){resetFiltros();filter='all';document.querySelector('.fpill[data-filter="all"]').classList.add('active');document.querySelector('.fpill[data-filter="all"]').style.background='#2a1f40';}
+    else iluminarNota(btn.dataset.nota);
+  });
+});
+
+// ── PANEL DRAG & DROP ──
+const panelNota = document.getElementById('panel-nota');
+document.getElementById('btn-reset').addEventListener('click',()=>{
+  resetFiltros(); filter='all'; selected=null; closeDrawer();
+  document.querySelectorAll('.fpill').forEach(b=>{b.classList.remove('active');b.style.background='';});
+  document.querySelector('.fpill[data-filter="all"]').classList.add('active');
+  document.querySelector('.fpill[data-filter="all"]').style.background='#2a1f40';
+});
+
+document.getElementById('btn-agregar-nota').addEventListener('click',()=>panelNota.classList.add('show'));
+document.getElementById('panel-cerrar').addEventListener('click',()=>panelNota.classList.remove('show'));
+
+// Drag and drop
+const dropZone = document.getElementById('drop-zone');
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('over');});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('over'));
+dropZone.addEventListener('drop',e=>{
+  e.preventDefault(); dropZone.classList.remove('over');
+  const file=e.dataTransfer.files[0];
+  if(file) leerArchivo(file);
+});
+document.getElementById('file-input').addEventListener('change',e=>{
+  const file=e.target.files[0]; if(file) leerArchivo(file);
+});
+
+function leerArchivo(file) {
+  const reader=new FileReader();
+  reader.onload=e=>{
+    let texto=e.target.result;
+    // si es HTML, extraer solo el texto
+    if(file.name.endsWith('.html')){
+      const tmp=document.createElement('div');
+      tmp.innerHTML=texto;
+      texto=tmp.textContent||tmp.innerText||'';
+    }
+    document.getElementById('input-texto').value=texto.slice(0,5000);
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('btn-procesar').addEventListener('click',()=>{
+  const texto=document.getElementById('input-texto').value.trim();
+  if(!texto){alert('Pegá un texto o arrastrá un archivo primero.');return;}
+  const encontrados=buscarEnTexto(texto);
+  mostrarResultado(encontrados);
+});
+
+function mostrarResultado(ids) {
+  const res=document.getElementById('resultado');
+  const wrap=document.getElementById('nodos-encontrados');
+  const msg=document.getElementById('resultado-msg');
+  wrap.innerHTML='';
+
+  if(ids.length===0){
+    msg.textContent='No encontré personajes del mapa en este texto. Probá con una nota sobre la AFA, la justicia federal o el gobierno Milei.';
+    res.classList.add('show');
+    document.getElementById('btn-iluminar').style.display='none';
+    return;
+  }
+
+  ids.forEach(id=>{
+    const n=nodeById(id); if(!n) return;
+    const cat=CATS[n.cat]||CATS['caso'];
+    const tag=document.createElement('div');
+    tag.className='nodo-tag encontrado';
+    tag.textContent=n.nombre;
+    tag.style.borderColor=cat.color;
+    tag.style.color=cat.color;
+    tag.style.background=cat.bg;
+    wrap.appendChild(tag);
+  });
+
+  msg.textContent=`Encontré ${ids.length} personaje${ids.length>1?'s':''} del mapa en este texto. Hacé clic en "Iluminar" para verlos destacados.`;
+  document.getElementById('btn-iluminar').style.display='block';
+  res.classList.add('show');
+
+  document.getElementById('btn-iluminar').onclick=()=>{
+    customIluminados=ids; notaFilter=null; filter='all'; selected=null; closeDrawer();
+    document.querySelectorAll('.fpill').forEach(b=>{b.classList.remove('active');b.style.background='';});
+    document.querySelector('.fpill[data-filter="all"]').classList.add('active');
+    document.querySelector('.fpill[data-filter="all"]').style.background='#2a1f40';
+    document.querySelectorAll('.fnota').forEach(b=>b.classList.remove('active'));
+    const badge=document.getElementById('nota-activa');
+    badge.textContent=`Tu nota ilumina ${ids.length} personaje${ids.length>1?'s':''} del mapa`;
+    badge.classList.add('show');
+    panelNota.classList.remove('show');
+  };
+}
+
+// notas de ejemplo en el panel
+document.querySelectorAll('.ejemplo-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    iluminarNota(btn.dataset.nota);
+    panelNota.classList.remove('show');
+  });
+});
+
+window.addEventListener('resize',resize);
+resize(); initPositions(); tick();
+</script>
+</body>
+</html>
